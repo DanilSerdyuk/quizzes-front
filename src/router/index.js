@@ -1,30 +1,34 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import authRoutes from "@/router/auth";
+import appRoutes from "@/router/app";
+import { getSelfHost } from "@/services/config/env";
+import authService from "@/services/api/auth";
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  },
-];
+const routes = [...authRoutes, ...appRoutes];
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
+  base: getSelfHost(),
   routes,
+});
+
+const authNames = authRoutes[0].children.map((i) => i.name);
+
+router.beforeEach((to, from, next) => {
+  // if user not authenticated
+  if (!authNames.includes(to.name) && !authService.getToken()) {
+    return next({ name: "login" });
+  }
+
+  // If user authenticated, but trying go to login page
+  if (authNames.includes(to.name) && authService.getToken()) {
+    return next("/");
+  }
+
+  return next();
 });
 
 export default router;
