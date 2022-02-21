@@ -23,7 +23,7 @@
           type="text"
           v-model="search"
           placeholder="Press enter for search..."
-          @keyup.enter="getList"
+          @change="getList"
         />
       </div>
       <div v-if="isAdmin" class="lg:ml-40 ml-10 space-x-8">

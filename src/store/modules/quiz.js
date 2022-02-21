@@ -67,10 +67,11 @@ const actions = {
       .deleteQuestion(id)
       .then(() => commit(MUTATIONS.REMOVE_QUESTION_BY_ID, id));
   },
-  [ACTIONS.DELETE]: ({ commit }, id) => {
-    return quizService
-      .deleteQuiz(id)
-      .then(() => commit(MUTATIONS.DELETE_QUIZ, id));
+  [ACTIONS.DELETE]: ({ commit, dispatch }, id) => {
+    return quizService.deleteQuiz(id).then(() => {
+      commit(MUTATIONS.DELETE_QUIZ, id);
+      return dispatch(ACTIONS.GET);
+    });
   },
   [ACTIONS.ASSIGNEE]: (_, params) => {
     return quizService.assigneeUsers(params);
