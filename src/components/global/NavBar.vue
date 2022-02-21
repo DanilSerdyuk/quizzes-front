@@ -2,7 +2,8 @@
   <div class="m-auto">
     <nav class="flex justify-between bg-indigo-600">
       <router-link
-        :to="{ name: 'admin' }"
+        v-if="'auth'"
+        :to="{ name: 'quiz.list' }"
         class="text-white py-4 px-6 block hover:text-gray-900 focus:outline-none"
       >
         Quizzes List

@@ -1,22 +1,39 @@
-const EmptyParentComponent = {
-  render: (h) => h("router-view"),
-};
+import Admin from "@/views/app/Admin";
+
+// const EmptyParentComponent = {
+//   render: (h) => h("router-view"),
+// };
 
 export default [
   {
     path: "",
-    redirect: "admin",
-    component: EmptyParentComponent,
+    redirect: { name: "quiz.list" },
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    redirect: { name: "quiz.list" },
+    component: Admin,
     children: [
       {
-        path: "/admin/forms",
-        name: "admin",
+        path: "forms",
+        name: "quiz.list",
         component: () => import("@/views/app/QuizzesList.vue"),
       },
       {
-        path: "about",
-        name: "About",
-        component: () => import("@/views/app/About.vue"),
+        path: "quiz/create",
+        name: "quiz.create",
+        component: () => import("@/views/app/QuizCreate.vue"),
+      },
+      {
+        path: "forms/:id",
+        name: "quiz.edit",
+        component: () => import("@/views/app/QuizEdit.vue"),
+      },
+      {
+        path: "/survey/:slug",
+        name: "quiz.show",
+        component: () => import("@/views/app/Survey.vue"),
       },
     ],
   },

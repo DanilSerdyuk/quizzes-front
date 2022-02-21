@@ -31,28 +31,16 @@
       </div>
       <!-- Modal body -->
       <div class="p-6 pt-0 text-center">
-        <svg
-          class="mx-auto mb-4 w-14 h-14 text-gray-400 dark:text-gray-200"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          ></path>
-        </svg>
+        <slot name="icon"></slot>
         <slot name="title"></slot>
+        <slot name="select"></slot>
         <button
           data-modal-toggle="popup-modal"
           type="button"
-          @click="deleteEntity(params.id)"
-          class="mr-4 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+          @click="$emit('confirm', { close, id: params.id })"
+          :class="`mr-4 text-white bg-${confirmColorButton}-600 hover:bg-${confirmColorButton}-800 focus:ring-4 focus:ring-${confirmColorButton}-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2`"
         >
-          Yes, I'm sure
+          All correct
         </button>
         <button
           @click="$emit('cancel', close)"
@@ -69,11 +57,12 @@
 
 <script>
 export default {
-  name: "ModalComponent",
+  name: "ModalConfirmComponent",
   inheritAttrs: false,
-  methods: {
-    deleteEntity(id) {
-      this.$emit("confirm", { close, id });
+  props: {
+    confirmColorButton: {
+      type: String,
+      default: () => "red",
     },
   },
 };

@@ -1,6 +1,7 @@
 import authHttp from "@/controllers/authHttp";
 
 const TOKEN_KEY = "token";
+const ROLES_KEY = "roles";
 
 /**
  * @param {string} token
@@ -26,10 +27,41 @@ function getToken() {
 }
 
 /**
+ * @return {array}
+ */
+function getRoles() {
+  const roles = localStorage.getItem(ROLES_KEY);
+
+  return JSON.parse(roles);
+}
+
+/**
+ * @return {void}
+ */
+function setRoles(roles) {
+  localStorage.setItem(ROLES_KEY, roles);
+}
+
+/**
+ * @return {void}
+ */
+function removeRoles() {
+  localStorage.removeItem(ROLES_KEY);
+}
+
+/**
+ * @return {string}
+ */
+function removeAuth() {
+  removeToken();
+  removeRoles();
+}
+
+/**
  * @return {Promise<void>}
  */
 function logout() {
-  return authHttp.logout().finally(() => removeToken());
+  return authHttp.logout().finally(() => removeAuth());
 }
 
 /**
@@ -44,7 +76,7 @@ function refresh() {
  * @return {Promise<AxiosResponse<any>>}
  */
 function login(params) {
-  return authHttp.login(params).then((response) => response.data);
+  return authHttp.login(params).then(async (response) => response.data);
 }
 
 /**
@@ -60,7 +92,10 @@ function registration(params) {
  * @return {Promise<AxiosResponse<any>>}
  */
 function authUser() {
-  return authHttp.authUser().then((response) => response.data);
+  return authHttp.authUser().then((response) => {
+    setRoles(JSON.stringify(response.data.roles));
+    return response.data;
+  });
 }
 
 export default {
@@ -72,4 +107,5 @@ export default {
   registration,
   authUser,
   login,
+  getRoles,
 };

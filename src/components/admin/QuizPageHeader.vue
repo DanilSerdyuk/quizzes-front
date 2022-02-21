@@ -21,15 +21,19 @@
         <input
           class="bg-gray-50 outline-none ml-1 block"
           type="text"
-          placeholder="search..."
+          v-model="search"
+          placeholder="Press enter for search..."
+          @keyup.enter="getList"
         />
       </div>
-      <div class="lg:ml-40 ml-10 space-x-8">
-        <button
+      <div v-if="isAdmin" class="lg:ml-40 ml-10 space-x-8">
+        <router-link
+          tag="button"
           class="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer"
+          :to="{ name: 'quiz.create' }"
         >
           New Quiz
-        </button>
+        </router-link>
       </div>
     </div>
   </div>
@@ -38,5 +42,29 @@
 <script>
 export default {
   name: "QuizPageHeader",
+  props: {
+    isAdmin: Boolean,
+  },
+  data() {
+    return {
+      search: this.$route.query.q ? this.$route.query.q : "",
+    };
+  },
+  methods: {
+    getList() {
+      if (this.search.length === 0) {
+        this.$router.push({ name: "admin" });
+      }
+
+      if (this.search.length > 0 && this.search.length < 3) {
+        this.$toast.error("Min length 3 symbols!");
+
+        return;
+      }
+
+      this.$router.push({ query: { q: this.search } });
+      this.$emit("setSearch");
+    },
+  },
 };
 </script>

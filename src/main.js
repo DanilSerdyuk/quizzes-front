@@ -3,7 +3,7 @@ import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
 import Plugins from "@/plugins/libraries/index";
-import "./assets/css/tailwind.css";
+import "@/assets/assets";
 
 Vue.config.productionTip = false;
 Vue.use(Plugins);

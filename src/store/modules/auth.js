@@ -23,36 +23,36 @@ const getters = {
 };
 
 const actions = {
-  [ACTIONS.ME]({ commit }) {
+  [ACTIONS.ME]: ({ commit }) => {
     return authService
       .authUser()
       .then((response) => commit(MUTATIONS.SET_USER, response));
   },
-  [ACTIONS.LOGIN]({ commit }, params) {
+  [ACTIONS.LOGIN]: ({ commit }, params) => {
     return authService
       .login(params)
-      .then((response) => commit(MUTATIONS.SET_TOKEN, response));
+      .then(async (response) => commit(MUTATIONS.SET_TOKEN, response));
   },
-  [ACTIONS.REGISTRATION](_, params) {
+  [ACTIONS.REGISTRATION]: (_, params) => {
     return authService
       .registration(params)
       .then(() => router.push({ name: "login" }));
   },
-  [ACTIONS.REFRESH]({ commit }) {
+  [ACTIONS.REFRESH]: ({ commit }) => {
     return authService
       .refresh()
       .then((response) => commit(MUTATIONS.SET_TOKEN, response));
   },
-  [ACTIONS.LOGOUT]() {
+  [ACTIONS.LOGOUT]: () => {
     return authService.logout().then(() => router.push({ name: "login" }));
   },
 };
 
 const mutations = {
-  [MUTATIONS.SET_TOKEN](state, data) {
+  [MUTATIONS.SET_TOKEN]: (state, data) => {
     authService.setToken(data.access_token);
   },
-  [MUTATIONS.SET_USER](state, user) {
+  [MUTATIONS.SET_USER]: (state, user) => {
     state.user = user;
   },
 };

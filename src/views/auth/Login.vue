@@ -18,10 +18,16 @@ export default {
   methods: {
     ...mapActions("auth", {
       loginAction: ACTIONS.LOGIN,
+      authUser: ACTIONS.ME,
     }),
     login(params) {
       this.loginAction(params)
-        .then(() => this.$router.push({ name: "admin" }))
+        .then(() =>
+          this.authUser().catch((e) =>
+            this.$toast.error(e.response.data.error.error_message)
+          )
+        )
+        .then(() => this.$router.push({ name: "quiz.list" }))
         .catch((e) => this.$toast.error(e.response.data.error.error_message));
     },
   },
